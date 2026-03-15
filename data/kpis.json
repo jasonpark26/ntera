@@ -1,0 +1,12 @@
+{
+  "desert_rate_overall_pct": 12.76747928711927,
+  "desert_rate_q1_pct": 22.346022903125967,
+  "desert_rate_q2_pct": 6.668793873643905,
+  "desert_rate_q3_pct": 8.83705650459921,
+  "desert_rate_q4_pct": 10.991519895629484,
+  "desert_rate_q5_pct": 15.523465703971121,
+  "neighborhood_rows": 16777,
+  "neighborhoods_with_income": 15534,
+  "avg_wait_min_weekday_non_null_pct": 61.37569291291649,
+  "trips_per_km2_weekday_non_null_pct": 100.0
+}

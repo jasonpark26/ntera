@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>NTERA — National Transit Equity Research Audit</title>
+  <link rel="stylesheet" href="style.css" />
+  <script defer src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+  <script defer src="app.js"></script>
+</head>
+<body>
+  <header class="wrap">
+    <div class="brand">
+      <div class="logo">NTERA</div>
+      <div>
+        <h1>National Transit Equity Research Audit</h1>
+        <p class="sub">
+          Planned service supply (GTFS Schedule) + neighborhood income (2021 Census Profile).
+          Minimal, static, and easy to update.
+        </p>
+      </div>
+    </div>
+
+    <div class="controls">
+      <div class="control">
+        <label for="comparison">Comparison</label>
+        <select id="comparison">
+          <option value="b50">Bottom 50% vs Top 50%</option>
+          <option value="q1q5">Q1 vs Q5 (Income Quintiles)</option>
+        </select>
+      </div>
+
+      <div class="control">
+        <label for="province">Province</label>
+        <select id="province">
+          <option value="ALL">All</option>
+        </select>
+      </div>
+
+      <div class="control">
+        <label for="metric">Primary metric</label>
+        <select id="metric">
+          <option value="wait">Wait gap (weekday)</option>
+          <option value="dens">Density gap (weekday)</option>
+        </select>
+      </div>
+
+      <div class="control">
+        <label for="direction">Show</label>
+        <select id="direction">
+          <option value="any">All systems</option>
+          <option value="low_worse">Low-income worse</option>
+          <option value="low_better">Low-income better</option>
+        </select>
+      </div>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section class="cards" id="kpi-cards">
+      <div class="card"><div class="k">Transit desert (overall)</div><div class="v" id="kpi-desert-overall">—</div></div>
+      <div class="card"><div class="k">Transit desert (Q1)</div><div class="v" id="kpi-desert-q1">—</div></div>
+      <div class="card"><div class="k">Transit desert (Q5)</div><div class="v" id="kpi-desert-q5">—</div></div>
+      <div class="card"><div class="k">Neighborhood rows</div><div class="v" id="kpi-rows">—</div></div>
+    </section>
+
+    <section class="section">
+      <h2>Province summary</h2>
+      <p class="hint">Medians of system gaps by province. Click headers to sort.</p>
+      <div class="table-wrap"><table id="prov-table"></table></div>
+    </section>
+
+    <section class="section">
+      <h2>City/system results</h2>
+      <p class="hint">
+        Wait gap = median(wait_low) − median(wait_high) (minutes). Positive = worse waits in lower-income.
+        Density gap = median(density_low) − median(density_high) (trips/km²). Negative = worse density in lower-income.
+      </p>
+      <div class="table-wrap"><table id="city-table"></table></div>
+    </section>
+
+    <section class="section">
+      <details>
+        <summary><strong>Method & limitations (quick)</strong></summary>
+        <div class="details">
+          <p>This is schedule-based (GTFS Schedule). It does not measure delays/cancellations (GTFS-Realtime).</p>
+          <p>Wait estimates are derived from scheduled headways in a defined time window and are most interpretable for frequent service.</p>
+          <p>When comparing many systems, avoid overclaiming; use multiple-testing control for “significant” lists.</p>
+        </div>
+      </details>
+    </section>
+
+    <section class="section">
+      <h2>Downloads</h2>
+      <ul class="downloads">
+        <li><a href="data/city_statistical_audit_bottom50_top50.csv">city_statistical_audit_bottom50_top50.csv</a></li>
+        <li><a href="data/city_statistical_audit_q1q5.csv">city_statistical_audit_q1q5.csv</a></li>
+        <li><a href="data/province_statistical_summary_bottom50_top50.csv">province_statistical_summary_bottom50_top50.csv</a></li>
+        <li><a href="data/province_statistical_summary_q1q5.csv">province_statistical_summary_q1q5.csv</a></li>
+        <li><a href="data/kpis.json">kpis.json</a></li>
+        <li><a href="data_dictionary.md">data_dictionary.md</a></li>
+      </ul>
+    </section>
+
+    <footer class="footer">
+      <p>NTERA — National Transit Equity Research Audit. Static site.</p>
+    </footer>
+  </main>
+</body>
+</html>
