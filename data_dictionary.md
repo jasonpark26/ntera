@@ -21,7 +21,8 @@ Weekend equivalents use *_we_* columns.
 - prov: province/territory code
 - cities: number of systems in that province
 - median_wait_gap_wk, median_dens_gap_wk: province median of city/system gaps
-- median_wait_gap_we, median_dens_gap_we: weekend equivalents
 
-## kpis.json
-National headline stats for homepage cards.
+## summary.json
+- desert_rate_overall_pct, desert_rate_q1_pct, desert_rate_q5_pct
+- weekday_wait_non_null_pct, weekday_density_non_null_pct
+- bottom50_top50 / q1_vs_q5: city-level median gaps (weekdays)

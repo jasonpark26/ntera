@@ -4,6 +4,11 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>NTERA — National Transit Equity Research Audit</title>
+  <meta name="description" content="A minimal public report and dashboard comparing planned transit service (GTFS Schedule) with neighborhood income across Canada." />
+  <meta property="og:title" content="NTERA — National Transit Equity Research Audit" />
+  <meta property="og:description" content="Planned transit service supply + neighborhood income. Explore key findings by province and city/system." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://ntera.ca/" />
   <link rel="stylesheet" href="style.css" />
   <script defer src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
   <script defer src="app.js"></script>
@@ -15,8 +20,7 @@
       <div>
         <h1>National Transit Equity Research Audit</h1>
         <p class="sub">
-          Planned service supply (GTFS Schedule) + neighborhood income (2021 Census Profile).
-          Minimal, static, and easy to update.
+          Minimal public report + dashboard. Uses planned service supply (GTFS Schedule) and neighborhood income (2021 Census Profile).
         </p>
       </div>
     </div>
@@ -54,14 +58,300 @@
         </select>
       </div>
     </div>
+
+    <nav class="topnav">
+      <a href="#report">Report</a>
+      <a href="#howto">How to</a>
+      <a href="#findings">Findings</a>
+      <a href="#methods">Methods</a>
+      <a href="#policy">Policy</a>
+      <a href="#ethics">Ethics</a>
+      <a href="#sources">Sources</a>
+      <a href="#reproduce">Reproduce</a>
+      <a href="#downloads">Downloads</a>
+      <a href="#faq">FAQ</a>
+    </nav>
   </header>
 
   <main class="wrap">
+    <div class="banner">
+      <strong>Important:</strong> This site uses <em>GTFS Schedule</em> (planned service). It does <strong>not</strong> measure delays/cancellations.
+      A reliability audit would require <a href="https://gtfs.org/documentation/realtime/reference/" target="_blank" rel="noopener">GTFS‑Realtime</a>.
+    </div>
     <section class="cards" id="kpi-cards">
       <div class="card"><div class="k">Transit desert (overall)</div><div class="v" id="kpi-desert-overall">—</div></div>
       <div class="card"><div class="k">Transit desert (Q1)</div><div class="v" id="kpi-desert-q1">—</div></div>
       <div class="card"><div class="k">Transit desert (Q5)</div><div class="v" id="kpi-desert-q5">—</div></div>
       <div class="card"><div class="k">Neighborhood rows</div><div class="v" id="kpi-rows">—</div></div>
+    </section>
+
+
+    <section class="section" id="howto">
+      <h2>How to read this page</h2>
+      <details class="report-details">
+        <summary><strong>What does “wait gap” mean?</strong></summary>
+        <div class="details">
+          <p>
+            Wait gap = median(wait in lower-income group) − median(wait in higher-income group), in minutes.
+            Positive means scheduled waits are longer in lower-income neighborhoods (worse). Negative means shorter (better).
+          </p>
+        </div>
+      </details>
+      <details class="report-details">
+        <summary><strong>What does “density gap” mean?</strong></summary>
+        <div class="details">
+          <p>
+            Density gap = median(trips/km² in lower-income group) − median(trips/km² in higher-income group).
+            Negative means lower-income neighborhoods have lower scheduled service density (worse).
+          </p>
+        </div>
+      </details>
+      <details class="report-details">
+        <summary><strong>Why “planned service” and not real delays?</strong></summary>
+        <div class="details">
+          <p>
+            This site uses GTFS Schedule (timetables). It does not measure delays or cancellations. That requires GTFS‑Realtime.
+          </p>
+        </div>
+      </details>
+    </section>
+
+    <section class="section" id="report">
+      <h2>Report (summary)</h2>
+      <p class="hint">This section is designed to be readable. Numbers update automatically from <code>/data/summary.json</code>.</p>
+
+      <div class="report-grid">
+        <div class="report-card">
+          <div class="k">Transit deserts</div>
+          <div class="v"><span id="r-desert-overall">—</span> overall</div>
+          <div class="subv">Q1: <span id="r-desert-q1">—</span> &nbsp;•&nbsp; Q5: <span id="r-desert-q5">—</span></div>
+        </div>
+
+        <div class="report-card">
+          <div class="k">Coverage (weekday)</div>
+          <div class="v"><span id="r-wait-cov">—</span> wait measurable</div>
+          <div class="subv"><span id="r-dens-cov">—</span> density measurable</div>
+        </div>
+
+        <div class="report-card">
+          <div class="k">Primary comparison</div>
+          <div class="v">Bottom50 vs Top50</div>
+          <div class="subv"><span id="r-b50-systems">—</span> systems analyzed</div>
+          <div class="subv">Median weekday wait gap: <b id="r-b50-wait">—</b></div>
+          <div class="subv">Median weekday density gap: <b id="r-b50-dens">—</b></div>
+        </div>
+
+        <div class="report-card">
+          <div class="k">Robustness check</div>
+          <div class="v">Q1 vs Q5</div>
+          <div class="subv"><span id="r-q-systems">—</span> systems analyzed</div>
+          <div class="subv">Median weekday wait gap: <b id="r-q-wait">—</b></div>
+          <div class="subv">Median weekday density gap: <b id="r-q-dens">—</b></div>
+        </div>
+      </div>
+
+      <details class="report-details">
+        <summary><strong>Key findings (plain English)</strong></summary>
+        <div class="details">
+          <ol>
+            <li><b>National pattern (schedule-based):</b> Lower-income neighborhoods do not consistently have worse planned service in this audit.</li>
+            <li><b>Where equity risk concentrates:</b> The clearest risk signal is <b>transit deserts</b> and coverage gaps, especially in the lowest-income quintile.</li>
+            <li><b>How to use this:</b> Prioritize “desert reduction” and coverage improvements. Treat “significant city” lists cautiously (multiple testing).</li>
+          </ol>
+        </div>
+      </details>
+    </section>
+
+    <section class="section" id="findings">
+      <h2>Findings and interpretation</h2>
+      <p class="hint">Longer-form takeaways. Expand what you need; keep the page digestible.</p>
+
+      <details class="report-details" open>
+        <summary><strong>Finding 1 — Not uniformly “low-income worse” for schedule-based supply</strong></summary>
+        <div class="details">
+          <p>
+            Many systems show equal or stronger scheduled service supply in lower-income neighborhoods (often reflecting dense corridors and core areas).
+            Equity concerns still exist, but may concentrate in deserts, in specific outliers, or in reliability (not measured by static schedules).
+          </p>
+        </div>
+      </details>
+
+      <details class="report-details">
+        <summary><strong>Finding 2 — Desert risk is highest in the lowest-income quintile</strong></summary>
+        <div class="details">
+          <p>
+            Deserts are the most communicable equity signal: “places with very weak or absent service.” Use this as the primary KPI for public reporting.
+          </p>
+        </div>
+      </details>
+
+      <details class="report-details">
+        <summary><strong>Finding 3 — Rankings should be paired with uncertainty</strong></summary>
+        <div class="details">
+          <p>
+            When many systems are tested, some will appear significant by chance. For public-facing lists, apply multiple-testing control and report confidence intervals.
+          </p>
+        </div>
+      </details>
+    </section>
+
+    <section class="section" id="methods">
+      <h2>Methods</h2>
+      <p class="hint">Short, reproducible, and readable.</p>
+
+      <details class="report-details" open>
+        <summary><strong>Data sources</strong></summary>
+        <div class="details">
+          <ul>
+            <li><strong>Transit:</strong> GTFS Schedule (planned trips, stop times, calendars). <a href="https://gtfs.org/documentation/schedule/reference/" target="_blank" rel="noopener">GTFS Schedule reference</a>.</li>
+            <li><strong>Income:</strong> Statistics Canada Census Profile (2021). <a href="https://www12.statcan.gc.ca/wds-sdw/2021profile-profil2021-eng.cfm" target="_blank" rel="noopener">Census Profile / WDS</a>.</li>
+          </ul>
+        </div>
+      </details>
+
+      <details class="report-details">
+        <summary><strong>Metrics</strong></summary>
+        <div class="details">
+          <ul>
+            <li><strong>Scheduled wait:</strong> derived from scheduled headways in a defined time window (weekday/weekend).</li>
+            <li><strong>Scheduled density:</strong> scheduled supply normalized by neighborhood area (trips/km²).</li>
+            <li><strong>Transit deserts:</strong> rule-based flag for very weak/absent service.</li>
+          </ul>
+        </div>
+      </details>
+
+      <details class="report-details">
+        <summary><strong>Equity comparisons + statistics</strong></summary>
+        <div class="details">
+          <ul>
+            <li><strong>Primary:</strong> Bottom50 vs Top50 (median split within system).</li>
+            <li><strong>Robustness:</strong> Q1 vs Q5 (quintiles within system).</li>
+            <li><strong>Effect:</strong> median gap (low − high). Wait gap &gt; 0 = worse waits in low-income; density gap &lt; 0 = worse density in low-income.</li>
+            <li><strong>Inference:</strong> Mann–Whitney U p-values (two-sided) and bootstrap confidence intervals.</li>
+          </ul>
+        </div>
+      </details>
+
+      <details class="report-details">
+        <summary><strong>What this does not measure</strong></summary>
+        <div class="details">
+          <p>
+            This is a planned-service audit. It does not capture delays/cancellations/crowding. For that, add
+            <a href="https://gtfs.org/documentation/realtime/reference/" target="_blank" rel="noopener">GTFS‑Realtime</a> where available.
+          </p>
+        </div>
+      </details>
+    </section>
+
+    
+    <section class="section" id="quality">
+      <h2>Data quality and coverage</h2>
+      <p class="hint">
+        Not every neighborhood has measurable scheduled wait time in the analysis window. This section reports coverage so results are interpreted responsibly.
+      </p>
+
+      <div class="report-grid">
+        <div class="report-card">
+          <div class="k">Neighborhood coverage (weekday)</div>
+          <div class="subv"><b id="dq-wait-cov">—</b> have measurable scheduled wait</div>
+          <div class="subv"><b id="dq-dens-cov">—</b> have measurable scheduled density</div>
+        </div>
+
+        <div class="report-card">
+          <div class="k">System coverage (primary)</div>
+          <div class="v">Bottom50 vs Top50</div>
+          <div class="subv">Systems analyzed: <b id="dq-b50-sys">—</b></div>
+          <div class="subv">Usable wait gaps (wk): <b id="dq-b50-wait">—</b></div>
+          <div class="subv">Usable density gaps (wk): <b id="dq-b50-dens">—</b></div>
+        </div>
+
+        <div class="report-card">
+          <div class="k">System coverage (robustness)</div>
+          <div class="v">Q1 vs Q5</div>
+          <div class="subv">Systems analyzed: <b id="dq-q-sys">—</b></div>
+          <div class="subv">Usable wait gaps (wk): <b id="dq-q-wait">—</b></div>
+          <div class="subv">Usable density gaps (wk): <b id="dq-q-dens">—</b></div>
+        </div>
+
+        <div class="report-card">
+          <div class="k">How to interpret missing wait</div>
+          <div class="subv">
+            In schedule-based evaluation, missing wait often means <em>zero scheduled trips</em> during the analysis window. Treat it as a coverage gap.
+          </div>
+        </div>
+      </div>
+
+      <details class="report-details">
+        <summary><strong>Quality rules used in the audit</strong></summary>
+        <div class="details">
+          <ul>
+            <li>Minimum sample sizes per system and per income group to compute robust statistics.</li>
+            <li>“Report tables” prefer complete finite statistics (gap + CI + p-value) to avoid NaN outputs.</li>
+            <li>For “significant city” lists, apply multiple-testing control (FDR) and require practical effect size thresholds.</li>
+          </ul>
+        </div>
+      </details>
+    </section>
+
+<section class="section" id="policy">
+      <h2>Policy implications and recommendations</h2>
+      <p class="hint">Prioritized for actionability and credibility.</p>
+
+      <details class="report-details" open>
+        <summary><strong>Recommendation 1 — Make desert reduction the primary equity KPI</strong></summary>
+        <div class="details">
+          <p>Track desert rate overall and by income group; prioritize where the lowest-income neighborhoods have the highest desert burden.</p>
+        </div>
+      </details>
+
+      <details class="report-details">
+        <summary><strong>Recommendation 2 — Treat “no service” as an outcome</strong></summary>
+        <div class="details">
+          <p>Where there are zero scheduled trips in the time window, wait is undefined—treat this as a coverage gap and report it explicitly.</p>
+        </div>
+      </details>
+
+      <details class="report-details">
+        <summary><strong>Recommendation 3 — Add reliability when feasible</strong></summary>
+        <div class="details">
+          <p>When GTFS‑Realtime is available, measure delay/cancellation patterns to capture reliability inequity.</p>
+        </div>
+      </details>
+
+      <details class="report-details">
+        <summary><strong>Recommendation 4 — Use multiple-testing control for “significant city” lists</strong></summary>
+        <div class="details">
+          <p>Apply FDR and require minimum practical effect sizes before listing systems publicly.</p>
+        </div>
+      </details>
+    </section>
+
+    <section class="section" id="ethics">
+      <h2>Limitations and ethics</h2>
+
+      <details class="report-details" open>
+        <summary><strong>Limitations</strong></summary>
+        <div class="details">
+          <ul>
+            <li><strong>Schedule ≠ reliability:</strong> planned service only.</li>
+            <li><strong>Wait assumptions:</strong> most interpretable for frequent service.</li>
+            <li><strong>Geography:</strong> CT and DA differ in size and coverage.</li>
+            <li><strong>System vs city:</strong> GTFS feeds may span multiple municipalities.</li>
+          </ul>
+        </div>
+      </details>
+
+      <details class="report-details">
+        <summary><strong>Ethics and responsible communication</strong></summary>
+        <div class="details">
+          <ul>
+            <li><strong>Privacy:</strong> aggregated neighborhood statistics only; no personal data.</li>
+            <li><strong>Avoid stigma:</strong> frame as service gaps and investment opportunities.</li>
+            <li><strong>Accessibility:</strong> plain language + readable tables; avoid color-only meaning.</li>
+            <li><strong>Licensing:</strong> respect open-data licenses and provide attribution.</li>
+          </ul>
+        </div>
+      </details>
     </section>
 
     <section class="section">
@@ -79,30 +369,153 @@
       <div class="table-wrap"><table id="city-table"></table></div>
     </section>
 
-    <section class="section">
-      <details>
-        <summary><strong>Method & limitations (quick)</strong></summary>
+    
+    <section class="section" id="sources">
+      <h2>Sources, licensing, and attribution</h2>
+      <p class="hint">
+        This project uses open data. You can reuse these results, but you should keep attribution and respect each source’s license terms.
+      </p>
+
+      <details class="report-details" open>
+        <summary><strong>Primary sources</strong></summary>
         <div class="details">
-          <p>This is schedule-based (GTFS Schedule). It does not measure delays/cancellations (GTFS-Realtime).</p>
-          <p>Wait estimates are derived from scheduled headways in a defined time window and are most interpretable for frequent service.</p>
-          <p>When comparing many systems, avoid overclaiming; use multiple-testing control for “significant” lists.</p>
+          <ul>
+            <li><strong>GTFS Schedule feeds</strong> (planned service): stops, trips, stop times, calendars. Reference: 
+              <a href="https://gtfs.org/documentation/schedule/reference/" target="_blank" rel="noopener">GTFS Schedule</a>.
+            </li>
+            <li><strong>Statistics Canada — Census Profile (2021)</strong> for neighborhood income and geography-level characteristics.
+              Terms: <a href="https://www.statcan.gc.ca/en/terms-conditions/open-licence" target="_blank" rel="noopener">Statistics Canada Open Licence</a>.
+            </li>
+          </ul>
+        </div>
+      </details>
+
+      <details class="report-details">
+        <summary><strong>Attribution template (copy/paste)</strong></summary>
+        <div class="details">
+          <p class="mono">
+            “This analysis uses GTFS Schedule feeds published by Canadian transit agencies (see agency portals for license details) 
+            and Statistics Canada Census Profile data (2021) licensed under the Statistics Canada Open Licence. 
+            Analysis and visualizations: NTERA (ntera.ca).”
+          </p>
+        </div>
+      </details>
+
+      <details class="report-details">
+        <summary><strong>Important notes about transit feed licenses</strong></summary>
+        <div class="details">
+          <p>
+            GTFS feeds are usually distributed via municipal or provincial open-data portals. License terms can differ by agency.
+            If you publish a downstream dataset, include a short “Data & Licensing” section and link to each portal’s license page when possible.
+          </p>
+        </div>
+      </details>
+
+      <details class="report-details">
+        <summary><strong>Data freshness</strong></summary>
+        <div class="details">
+          <p>
+            Income values come from the 2021 Census Profile (income year 2020). GTFS feeds represent the schedules available at the time they were collected.
+            If you refresh GTFS inputs, regenerate the outputs and replace the files in <code>/data</code>.
+          </p>
         </div>
       </details>
     </section>
 
-    <section class="section">
+
+
+    <section class="section" id="reproduce">
+      <h2>Reproducibility and updates</h2>
+      <p class="hint">
+        This site is fully static. To update results, replace the files in <code>/data</code> and commit.
+      </p>
+
+      <details class="report-details" open>
+        <summary><strong>How to update the site</strong></summary>
+        <div class="details">
+          <ol>
+            <li>Regenerate outputs and export updated CSVs.</li>
+            <li>Replace the CSVs in <code>/data</code> (same filenames).</li>
+            <li>Commit and push — GitHub Pages updates automatically.</li>
+          </ol>
+        </div>
+      </details>
+
+      <details class="report-details">
+        <summary><strong>View code / repository</strong></summary>
+        <div class="details">
+          <p>Replace this placeholder with your repo URL:</p>
+          <p class="mono">https://github.com/YOUR_USERNAME/YOUR_REPO</p>
+        </div>
+      </details>
+    </section>
+
+<section class="section" id="downloads">
       <h2>Downloads</h2>
       <ul class="downloads">
         <li><a href="data/city_statistical_audit_bottom50_top50.csv">city_statistical_audit_bottom50_top50.csv</a></li>
         <li><a href="data/city_statistical_audit_q1q5.csv">city_statistical_audit_q1q5.csv</a></li>
         <li><a href="data/province_statistical_summary_bottom50_top50.csv">province_statistical_summary_bottom50_top50.csv</a></li>
         <li><a href="data/province_statistical_summary_q1q5.csv">province_statistical_summary_q1q5.csv</a></li>
+        <li><a href="data/summary.json">summary.json</a></li>
         <li><a href="data/kpis.json">kpis.json</a></li>
         <li><a href="data_dictionary.md">data_dictionary.md</a></li>
+        <li><a href="https://www.statcan.gc.ca/en/terms-conditions/open-licence" target="_blank" rel="noopener">Statistics Canada Open Licence</a></li>
       </ul>
     </section>
 
-    <footer class="footer">
+    
+    <section class="section" id="glossary">
+      <h2>Glossary</h2>
+      <details class="report-details" open>
+        <summary><strong>Wait gap</strong></summary>
+        <div class="details"><p>Median scheduled wait (low-income) − median scheduled wait (high-income), minutes. Positive = worse waits in low-income areas.</p></div>
+      </details>
+      <details class="report-details">
+        <summary><strong>Density gap</strong></summary>
+        <div class="details"><p>Median trips/km² (low-income) − median trips/km² (high-income). Negative = worse density in low-income areas.</p></div>
+      </details>
+      <details class="report-details">
+        <summary><strong>Transit desert</strong></summary>
+        <div class="details"><p>A rule-based flag for neighborhoods with very weak or absent planned service in the analysis window.</p></div>
+      </details>
+      <details class="report-details">
+        <summary><strong>Planned service vs reliability</strong></summary>
+        <div class="details"><p>GTFS Schedule measures planned service. Reliability (delays/cancellations) requires GTFS‑Realtime or agency performance data.</p></div>
+      </details>
+    </section>
+
+<section class="section" id="faq">
+      <h2>FAQ</h2>
+      <details class="report-details">
+        <summary><strong>Why is wait missing for some neighborhoods?</strong></summary>
+        <div class="details"><p>Most commonly: no scheduled trips serve that neighborhood in the analysis window. Treat it as a coverage gap.</p></div>
+      </details>
+      <details class="report-details">
+        <summary><strong>Does this measure delays/cancellations?</strong></summary>
+        <div class="details"><p>No. This is planned-service (GTFS Schedule). Reliability requires GTFS‑Realtime where available.</p></div>
+      </details>
+      <details class="report-details">
+        <summary><strong>Why can higher-income areas look underserved?</strong></summary>
+        <div class="details"><p>Many higher-income neighborhoods are low-density suburbs with lower frequency and fewer routes.</p></div>
+      </details>
+    </section>
+
+    
+    <section class="section" id="changelog">
+      <h2>Changelog</h2>
+      <details class="report-details">
+        <summary><strong>Recent updates</strong></summary>
+        <div class="details">
+          <ul>
+            <li><strong>v5:</strong> Added Data Quality/Coverage, Last Updated timestamp, Reproducibility, Glossary, SEO tags, and a reliability disclaimer banner.</li>
+            <li><strong>v4:</strong> Added Sources/Licensing and “How to read” definitions.</li>
+          </ul>
+        </div>
+      </details>
+    </section>
+
+<footer class="footer">
       <p>NTERA — National Transit Equity Research Audit. Static site.</p>
     </footer>
   </main>

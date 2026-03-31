@@ -1,27 +1,25 @@
-# ntera.ca — GitHub Pages (minimal static)
+# ntera.ca — GitHub Pages (single-page static)
 
-## What this is
-A single-page site that loads precomputed CSV outputs from /data and renders:
-- national KPI cards (from data/kpis.json)
-- a province summary table
-- a sortable/filterable city/system table
+## What this includes
+- Report summary (numbers + key findings)
+- Expanded sections: Findings, Methods, Policy, Ethics, FAQ
+- Province and City/System tables (sortable/filterable)
+- Downloads
 
 ## Deploy
-1) Create a GitHub repo (public is simplest) and upload the `ntera_site` folder contents to the repo root.
-2) GitHub → Settings → Pages → Deploy from a branch (main / root).
-3) In Settings → Pages → Custom domain, set: `ntera.ca`
+Upload the contents of the `ntera_site/` folder to your repo root (index.html at root).
+Enable GitHub Pages → Deploy from branch (main / root).
+Set custom domain to ntera.ca.
 
-## DNS records (at your registrar)
-A (Host: @)
+## DNS
+A records for @:
 - 185.199.108.153
 - 185.199.109.153
 - 185.199.110.153
 - 185.199.111.153
 
-CNAME (Host: www) → `<YOUR_GITHUB_USERNAME>.github.io`
-
-Then enable “Enforce HTTPS” in GitHub Pages when available.
+CNAME for www:
+- www → <YOUR_GITHUB_USERNAME>.github.io
 
 ## Update data
-Replace the CSVs in /data and commit.
-If you want KPI cards to update, also regenerate `data/kpis.json` from your neighborhood file.
+Replace files in /data and commit.

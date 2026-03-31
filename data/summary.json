@@ -1,0 +1,45 @@
+{
+  "generated_from": "stage2_outputs",
+  "neighborhood_rows": 16777,
+  "neighborhoods_with_income": 15534,
+  "desert_rate_overall_pct": 12.76747928711927,
+  "desert_rate_q1_pct": 22.346022903125967,
+  "desert_rate_q5_pct": 15.523465703971121,
+  "weekday_wait_non_null_pct": 61.37569291291649,
+  "weekday_density_non_null_pct": 100.0,
+  "bottom50_top50": {
+    "systems_analyzed": 70,
+    "median_wait_gap_wk": -1.0273269653052264,
+    "median_dens_gap_wk": 13.647019515109644,
+    "median_wait_gap_we": -0.8047121741011054,
+    "median_dens_gap_we": 14.2166066010964
+  },
+  "q1_vs_q5": {
+    "systems_analyzed": 50,
+    "median_wait_gap_wk": -2.2850794181261094,
+    "median_dens_gap_wk": 42.71915044356806,
+    "median_wait_gap_we": -2.2363318789510487,
+    "median_dens_gap_we": 31.7891244313266
+  },
+  "generated_on_utc": "2026-03-23T23:38:48Z",
+  "notes": {
+    "site": "Static GitHub Pages site reads CSV/JSON from /data. Replace /data files to update.",
+    "scope": "Planned service supply (GTFS Schedule); not operational reliability."
+  },
+  "quality": {
+    "bottom50_top50": {
+      "systems_analyzed": 70,
+      "usable_wait_wk": 39,
+      "usable_dens_wk": 70,
+      "usable_wait_we": 40,
+      "usable_dens_we": 70
+    },
+    "q1_vs_q5": {
+      "systems_analyzed": 50,
+      "usable_wait_wk": 29,
+      "usable_dens_wk": 50,
+      "usable_wait_we": 25,
+      "usable_dens_we": 50
+    }
+  }
+}
